@@ -5,6 +5,7 @@
  *	additional details specific to this module:
  *		- whitespace before and after a line are ignored
  *		- empty lines are ignored
+ *		- allows empty value, but not empty key
  */
 
 
@@ -39,7 +40,7 @@ readINI(filepath){
 				iniObj[currentSection] := {}
 			}else{
 				pair := StrSplit(line, "=")
-				if(pair.Length() != 2 || currentSection = ""){
+				if(pair.Length() != 2 || pair[1] = "" || currentSection = ""){
 					throw Exception("Invalid ini file")
 				}
 				
@@ -50,3 +51,4 @@ readINI(filepath){
 
 	return iniObj
 }
+
