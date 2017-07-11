@@ -72,12 +72,29 @@ writeINI(filepath, configObj){
 		throw Exception("Parameter 2 must be an object")
 	}
 
-	iniStr := "",
+	iniStr := ""
+	numSections := countKeys(configObj)
+	numPairs := ""
 
 	For Section, Pair in configObj{
-		iniStr .= "[" . Section . "]`n"
+		iniStr .= "[" . Section . "]"
+
+		if(A_Index = numSections){
+			numPairs := countKeys(configObj[Section])
+
+			if(numPairs > 0){
+				iniStr .= "`n"
+			}
+		}else{
+			iniStr .= "`n"
+		}
+
 		For Key, Value in Pair{
-			iniStr .= Key . "=" . Value . "`n"
+			iniStr .= Key . "=" . Value
+
+			if(numPairs = "" || A_Index < numPairs){
+				iniStr .= "`n"
+			}
 		}
 	}
 
@@ -85,4 +102,13 @@ writeINI(filepath, configObj){
 	if(file){
 		return file.Write(iniStr)
 	}
+}
+
+
+countKeys(obj){
+	numKeys := 0
+	For Key in obj{
+		numKeys++
+	}
+	return numKeys
 }
