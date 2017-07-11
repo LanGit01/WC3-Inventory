@@ -13,7 +13,7 @@
  *	Function: readINI
  *
  *	Reads an INI file, building an object representing the contents of the INI file.
- *	The object has the following format:
+ *	The object has the following structure:
  *
  *		ObjectVar[Section][Key] = Value
  *
@@ -52,3 +52,37 @@ readINI(filepath){
 	return iniObj
 }
 
+/*
+ *	Function:  writeINI
+ *
+ *	Creates an INI file from the provided object. The first-level keys are used as Sections.
+ *	Second-level keys are used as Keys, and the value as Values. Thus, the object structure
+ *	is as such:
+ *
+ *		ObjectVar[Section][Key] = Value
+ *
+ *	If a the file in `filepath` exists, it will be overwritten.
+ *		
+ *	Returns:
+ *		Number of bytes written, if successful
+ *		Blank, otherwise
+ */
+writeINI(filepath, configObj){
+	if(!IsObject(configObj)){
+		throw Exception("Parameter 2 must be an object")
+	}
+
+	iniStr := "",
+
+	For Section, Pair in configObj{
+		iniStr .= "[" . Section . "]`n"
+		For Key, Value in Pair{
+			iniStr .= Key . "=" . Value . "`n"
+		}
+	}
+
+	file := FileOpen(filepath, "w")
+	if(file){
+		return file.Write(iniStr)
+	}
+}
