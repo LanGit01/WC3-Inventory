@@ -5,11 +5,17 @@
 origKeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
 defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
 
-testHotkeys := ["!q", "!wa", "!a", "!s", "!z", "!x"]
+testMapping := ["!q", "!w", "!a", "!s", "!z", "!x", "!h", "!j"]
 
 ; Default mapping
 defaultMapping := map(defaultHotkeys, origKeys)
-deepPrintObject(defaultMapping)
+reverseDefaultMapping := reverseMap(defaultMapping)
+
+reverseActiveMapping := addMapDefaults(map(origKeys, testMapping), reverseDefaultMapping)
+deepPrintObject(reverseActiveMapping)
+
+activeMapping := reverseMap(reverseActiveMapping)
+;deepPrintObject(activeMapping)
 
 Exit
 
@@ -25,7 +31,18 @@ return
 ;==========================================
 ;				Functions
 ;==========================================
-; create an object where newKeys[key]: origKeys[key]
+
+/*
+ *	Function: map
+ *
+ *	Remaps the values of the first object to the values of the second object
+ *	using their keys. If the second object has keys that the first do not, they
+ *	are ignored.
+ *	
+ *	Returns:
+ *		an object in which the key-value pairs are as such:
+ *			keys[key]: values[key]
+ */
 map(keys, values){
 	remap := {}
 
@@ -38,18 +55,27 @@ map(keys, values){
 	return remap
 }
 
-/*
-reverseMapping(obj){
-	remap := {}
+
+reverseMap(obj){
+	reversemap := {}
 
 	For key, value in obj{
-		remap[value] := key
+		reversemap[value] := key
 	}
 
-	return remap
+	return reversemap
 }
 
+addMapDefaults(map, defaults){
+	For key, in defaults{
+		if(!map.HasKey(key)){
+			map[key] := defaults[key]
+		}
+	}
 
+	return map
+}
+/*
 setHotkey(key, targetLabel){
 	ErrorLevel := 0
 	Hotkey, %key%, %targetlabel%, UseErrorLevel
