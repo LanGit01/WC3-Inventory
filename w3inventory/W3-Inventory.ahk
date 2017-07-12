@@ -16,37 +16,33 @@ defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
 
 testMapping := ["!q", "!w", "!a", "!s", "!z", "!x", "!h", "!j"]
 
-; Default mapping
+; Default mapping [hotkey:origkey]
 defaultMapping := map(defaultHotkeys, origKeys)
-reverseDefaultMapping := reverseMap(defaultMapping)
+rDefaultMapping := reverseMap(defaultMapping)
 
+rActiveMapping := rDefaultMapping
 
 ; Fetch config file
-
-
-reverseActiveMapping := reverseDefaultMapping
 if(FileExist(CONFIG_PATH)){
 	try{
 		config := readINI(CONFIG_PATH)
 		if(config.HasKey(KEYMAP_SECTION)){
-			reverseActiveMapping := addMapDefaults(map(origKeys, config[KEYMAP_SECTION]), reverseDefaultMapping)
+			rActiveMapping := addMapDefaults(map(origKeys, config[KEYMAP_SECTION]), rDefaultMapping, true)
 		}
 	}catch e{
+		; Not a even a bite...
 	}
-}else{
-	MsgBox, NO
 }
 
-MsgBox, % deepPrintObject(reverseActiveMapping)
+; Remove duplicates here
 
+MsgBox, % deepPrintObject(rActiveMapping)
 
-
-
-reverseActiveMapping := addMapDefaults(map(origKeys, testMapping), reverseDefaultMapping)
-;deepPrintObject(reverseActiveMapping)
-
-activeMapping := reverseMap(reverseActiveMapping)
-;deepPrintObject(activeMapping)
+/*
+ 	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
+	- addMapDefaults (possible: duplicate new key)
+	- reverse
+*/
 
 Exit
 
@@ -111,14 +107,24 @@ reverseMap(obj){
  *	Returns:
  *		The object `map` with the added defaults
  */
-addMapDefaults(map, defaults){
-	For key, in defaults{
-		if(!map.HasKey(key)){
+addMapDefaults(map, defaults, unique := false){
+	For key in defaults{
+		if(!map.HasKey(key) && (!unique || (unique && !hasValue(map, defaults[key])))){
 			map[key] := defaults[key]
 		}
 	}
 
 	return map
+}
+
+hasValue(obj, sVal){
+	For key in obj{
+		if(obj[key] = sVal){
+			return true
+		}
+	}
+
+	return false
 }
 
 
