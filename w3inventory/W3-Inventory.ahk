@@ -55,7 +55,13 @@ map(keys, values){
 	return remap
 }
 
-
+/*
+ *	Function reverseMap
+ *
+ *	Returns:
+ *		A new object in which the keys and values of the `obj`
+ *		parameter are switched (key=value -> value->key)
+ */
 reverseMap(obj){
 	reversemap := {}
 
