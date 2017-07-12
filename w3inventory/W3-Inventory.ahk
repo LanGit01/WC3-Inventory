@@ -2,19 +2,14 @@
 #NoEnv
 
 ; Inventory item slots' shortcut keys. Index corresponds to slot number.
-origHotkeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
+origKeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
 defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
 
 testHotkeys := ["!q", "!wa", "!a", "!s", "!z", "!x"]
 
-reverseHotkeyMap := buildRemapObject(origHotkeys, testHotkeys)
-hotkeyMap := reverseMapping(reverseHotkeyMap)
-
-MsgBox, % deepPrintObject(hotkeyMap)
-
-
-;enableHotkeys(hotkeyMap, "hotkey_press")
-
+; Default mapping
+defaultMapping := map(defaultHotkeys, origKeys)
+deepPrintObject(defaultMapping)
 
 Exit
 
@@ -23,32 +18,27 @@ Exit
 ;==========================================
 
 hotkey_press:
+
 	Send, % hotkeyMap[A_ThisHotkey]
 return
 
 ;==========================================
 ;				Functions
 ;==========================================
-
-setHotkey(key, targetlabel){
-	ErrorLevel := 0
-	Hotkey, %key%, %targetlabel%, UseErrorLevel
-	return ErrorLevel
-}
-
 ; create an object where newKeys[key]: origKeys[key]
-buildRemapObject(origKeys, newKeys){
+map(keys, values){
 	remap := {}
 
-	For key, value in origKeys{
-		if(newKeys.HasKey(key)){
-			remap[value] := newKeys[key]
+	For key in keys{
+		if(values.HasKey(key)){
+			remap[keys[key]] := values[key]
 		}
 	}
 
 	return remap
 }
 
+/*
 reverseMapping(obj){
 	remap := {}
 
@@ -59,17 +49,25 @@ reverseMapping(obj){
 	return remap
 }
 
-enableHotkeys(keys, targetLabel){
-	For key in keys{
-		Hotkey, %key%, %targetLabel%
-	}
+
+setHotkey(key, targetLabel){
+	ErrorLevel := 0
+	Hotkey, %key%, %targetlabel%, UseErrorLevel
+	return ErrorLevel
 }
 
-disableHotkeys(keys){
-	For key, value in keys{
-		Hotkey, %key%,, Off
+createHotkeys(keymap, targetLabel, enabled := false){
+	For , value in keys{
+		if(enabled){
+			Hotkey, %value%, %targetLabel%, On
+		}else{
+			Hotkey, %value%, %targetLabel%, Off
+		}		
 	}
+
+	return keymap
 }
+*/
 
 deepPrintObject(obj, level := 1){
 	str := "", pad := ""
@@ -88,5 +86,5 @@ deepPrintObject(obj, level := 1){
 		}
 	}
 
-	return str
+	MsgBox, %str%
 }
