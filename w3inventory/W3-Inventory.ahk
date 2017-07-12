@@ -1,6 +1,15 @@
 #SingleInstance, force
 #NoEnv
 
+#include lib\ini-parser.ahk
+
+;===================================
+;			Constants
+;===================================
+TEMP_DIR_PATH := "w3inventory\"
+CONFIG_PATH := TEMP_DIR_PATH . "keymap.ini"
+KEYMAP_SECTION := "keymap"
+
 ; Inventory item slots' shortcut keys. Index corresponds to slot number.
 origKeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
 defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
@@ -11,8 +20,30 @@ testMapping := ["!q", "!w", "!a", "!s", "!z", "!x", "!h", "!j"]
 defaultMapping := map(defaultHotkeys, origKeys)
 reverseDefaultMapping := reverseMap(defaultMapping)
 
+
+; Fetch config file
+
+
+reverseActiveMapping := reverseDefaultMapping
+if(FileExist(CONFIG_PATH)){
+	try{
+		config := readINI(CONFIG_PATH)
+		if(config.HasKey(KEYMAP_SECTION)){
+			reverseActiveMapping := addMapDefaults(map(origKeys, config[KEYMAP_SECTION]), reverseDefaultMapping)
+		}
+	}catch e{
+	}
+}else{
+	MsgBox, NO
+}
+
+MsgBox, % deepPrintObject(reverseActiveMapping)
+
+
+
+
 reverseActiveMapping := addMapDefaults(map(origKeys, testMapping), reverseDefaultMapping)
-deepPrintObject(reverseActiveMapping)
+;deepPrintObject(reverseActiveMapping)
 
 activeMapping := reverseMap(reverseActiveMapping)
 ;deepPrintObject(activeMapping)
@@ -56,11 +87,11 @@ map(keys, values){
 }
 
 /*
- *	Function reverseMap
+ *	Function: reverseMap
  *
  *	Returns:
  *		A new object in which the keys and values of the `obj`
- *		parameter are switched (key=value -> value->key)
+ *		parameter are switched (key=value -> value=key)
  */
 reverseMap(obj){
 	reversemap := {}
@@ -72,6 +103,14 @@ reverseMap(obj){
 	return reversemap
 }
 
+/*
+ *	Function: addMapDefaults
+ *
+ *	Adds to `map` missing key-value pairs.
+ *
+ *	Returns:
+ *		The object `map` with the added defaults
+ */
 addMapDefaults(map, defaults){
 	For key, in defaults{
 		if(!map.HasKey(key)){
@@ -81,6 +120,8 @@ addMapDefaults(map, defaults){
 
 	return map
 }
+
+
 /*
 setHotkey(key, targetLabel){
 	ErrorLevel := 0
@@ -118,5 +159,5 @@ deepPrintObject(obj, level := 1){
 		}
 	}
 
-	MsgBox, %str%
+	return str
 }
