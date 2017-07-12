@@ -3,28 +3,72 @@
 
 ; Inventory item slots' shortcut keys. Index corresponds to slot number.
 origHotkeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
-defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!c"]
+defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
 
-MsgBox, % deepPrintObject(buildRemapObject(defaultHotkeys, origHotkeys))
+testHotkeys := ["!q", "!wa", "!a", "!s", "!z", "!x"]
+
+reverseHotkeyMap := buildRemapObject(origHotkeys, testHotkeys)
+hotkeyMap := reverseMapping(reverseHotkeyMap)
+
+MsgBox, % deepPrintObject(hotkeyMap)
+
+
+;enableHotkeys(hotkeyMap, "hotkey_press")
 
 
 Exit
 
 ;==========================================
+;				Subroutines
+;==========================================
+
+hotkey_press:
+	Send, % hotkeyMap[A_ThisHotkey]
+return
+
+;==========================================
 ;				Functions
 ;==========================================
 
+setHotkey(key, targetlabel){
+	ErrorLevel := 0
+	Hotkey, %key%, %targetlabel%, UseErrorLevel
+	return ErrorLevel
+}
+
 ; create an object where newKeys[key]: origKeys[key]
-buildRemapObject(newKeys, origKeys){
+buildRemapObject(origKeys, newKeys){
 	remap := {}
 
 	For key, value in origKeys{
 		if(newKeys.HasKey(key)){
-			remap[newKeys[key]] := value 
+			remap[value] := newKeys[key]
 		}
 	}
 
 	return remap
+}
+
+reverseMapping(obj){
+	remap := {}
+
+	For key, value in obj{
+		remap[value] := key
+	}
+
+	return remap
+}
+
+enableHotkeys(keys, targetLabel){
+	For key in keys{
+		Hotkey, %key%, %targetLabel%
+	}
+}
+
+disableHotkeys(keys){
+	For key, value in keys{
+		Hotkey, %key%,, Off
+	}
 }
 
 deepPrintObject(obj, level := 1){
