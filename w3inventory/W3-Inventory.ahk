@@ -18,10 +18,11 @@ DEFAULT_HOTKEYS := ["!q", "!w", "!a", "!s", "!z", "!x"]
 ; Default mapping
 DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 
-activeMapping := constructActiveMapping()
-hotkeyLookup := reverseMap(activeMapping)
+ActiveMapping := constructActiveMapping()
+hotkeyLookup := reverseMap(ActiveMapping)
 
-MsgBox, % deepPrintObject(activeMapping)
+
+;MsgBox, % deepPrintObject(activeMapping)
 
 /*
  	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
@@ -45,6 +46,8 @@ return
 ;==========================================
 ;				Functions
 ;==========================================
+
+
 
 constructActiveMapping(){
 	global
@@ -155,6 +158,16 @@ hasValue(obj, sVal){
 	For key in obj{
 		if(obj[key] = sVal){
 			return true
+		}
+	}
+
+	return false
+}
+
+keyOf(obj, sVal){
+	For key in obj{
+		if(obj[key] = sVal){
+			return key
 		}
 	}
 
