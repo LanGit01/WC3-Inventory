@@ -20,6 +20,7 @@ testMapping := ["!q", "!w", "!a", "!s", "!z", "!x", "!h", "!j"]
 defaultMapping := map(defaultHotkeys, origKeys)
 rDefaultMapping := reverseMap(defaultMapping)
 
+activeMapping := ""
 rActiveMapping := rDefaultMapping
 
 ; Fetch config file
@@ -34,9 +35,11 @@ if(FileExist(CONFIG_PATH)){
 	}
 }
 
+hotkeyLookup := activeMapping := reverseMap(rActiveMapping)
+
 ; Remove duplicates here
 
-MsgBox, % deepPrintObject(rActiveMapping)
+MsgBox, % deepPrintObject(activeMapping)
 
 /*
  	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
