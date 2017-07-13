@@ -28,18 +28,17 @@ MsgBox % deepPrintObject(activeMapping)
 MsgBox % deepPrintObject(hotkeyLookup)
 */
 
-saveConfig()
-
-
+hotkeyLookup["qa"] := "{Numpad7}"
 
 
 ;==========================================
 ;				Subroutines
 ;==========================================
 
-hotkey_press:
+/*hotkey_press:
 	Send, % hotkeyMap[A_ThisHotkey]
 return
+*/
 
 
 
@@ -47,6 +46,44 @@ return
 ;==========================================
 ;				Functions
 ;==========================================
+hotkeyPress(){
+	global hotkeyLookup
+
+	Send, % hotkeyLookup[A_ThisHotkey]
+}
+
+/*
+ *	Function: startHotkeys
+ *	
+ *	Starts the hotkeys mapped in `hotkeyLookup`
+ *
+ *	Returns:
+ *		An object containing the hotkey strings as keys and the
+ *		status as values. True if hotkey is valid and is installed,
+ *		false otherwise
+ */
+startHotkeys(){
+	global hotkeyLookup
+
+	installedHotkeys := {}
+
+	For hk in hotkeyLookup{
+		ErrorLevel := 0
+		Hotkey, %hk%, hotkeyPress, ON UseErrorLevel
+
+
+		if(ErrorLevel = 0){
+			installedHotkeys[hk] := true
+		}else
+		if(ErrorLevel = 2){
+			installedHotkeys[hk] := false
+		}else{
+			throw Exception(ErrorLevel)
+		}
+	}
+
+	return installedHotkeys
+}
 
 saveConfig(){
 	global CONFIG_PATH, KEYMAP_SECTION, ORIG_KEYS, ActiveMapping
