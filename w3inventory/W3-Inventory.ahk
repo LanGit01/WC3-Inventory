@@ -19,17 +19,16 @@ DEFAULT_HOTKEYS := ["!q", "!w", "!a", "!s", "!z", "!x"]
 DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 
 ActiveMapping := constructActiveMapping()
-hotkeyLookup := reverseMap(ActiveMapping)
+HotkeyLookup := reverseMap(ActiveMapping)
 
 /*
 MsgBox % deepPrintObject(activeMapping)
 MsgBox % (setHotkeyMapping(1, "!w") ? "true" : "false")
 MsgBox % deepPrintObject(activeMapping)
-MsgBox % deepPrintObject(hotkeyLookup)
+MsgBox % deepPrintObject(HotkeyLookup)
 */
 
-hotkeyLookup["qa"] := "{Numpad7}"
-
+startHotkeys()
 
 ;==========================================
 ;				Subroutines
@@ -47,15 +46,15 @@ return
 ;				Functions
 ;==========================================
 hotkeyPress(){
-	global hotkeyLookup
+	global HotkeyLookup
 
-	Send, % hotkeyLookup[A_ThisHotkey]
+	Send, % HotkeyLookup[A_ThisHotkey]
 }
 
 /*
  *	Function: startHotkeys
  *	
- *	Starts the hotkeys mapped in `hotkeyLookup`
+ *	Starts the hotkeys mapped in `HotkeyLookup`
  *
  *	Returns:
  *		An object containing the hotkey strings as keys and the
@@ -63,11 +62,11 @@ hotkeyPress(){
  *		false otherwise
  */
 startHotkeys(){
-	global hotkeyLookup
+	global HotkeyLookup
 
 	installedHotkeys := {}
 
-	For hk in hotkeyLookup{
+	For hk in HotkeyLookup{
 		ErrorLevel := 0
 		Hotkey, %hk%, hotkeyPress, ON UseErrorLevel
 
@@ -85,17 +84,8 @@ startHotkeys(){
 	return installedHotkeys
 }
 
-saveConfig(){
-	global CONFIG_PATH, KEYMAP_SECTION, ORIG_KEYS, ActiveMapping
-
-	configObj := {(KEYMAP_SECTION): map(reverseMap(ORIG_KEYS), ActiveMapping)}
-	if(!writeINI(CONFIG_PATH, configObj)){
-		throw Exception("Unable to save configuration")
-	}
-}
-
 setHotkeyMapping(slotNum, hkString){
-	global ORIG_KEYS, ActiveMapping, hotkeyLookup
+	global ORIG_KEYS, ActiveMapping, HotkeyLookup
 
 	if(!ORIG_KEYS.HasKey(slotNum)){
 		return false
@@ -109,10 +99,10 @@ setHotkeyMapping(slotNum, hkString){
 		return false
 	}
 
-	hotkeyLookup.Delete(hkOldActive)
-	duplicateOrigKey := hotkeyLookup[hkString]
+	HotkeyLookup.Delete(hkOldActive)
+	duplicateOrigKey := HotkeyLookup[hkString]
 
-	hotkeyLookup[hkString] := origKey
+	HotkeyLookup[hkString] := origKey
 	ActiveMapping[origKey] := hkString
 
 	; Update ActiveMapping
@@ -125,12 +115,22 @@ setHotkeyMapping(slotNum, hkString){
 
 constructActiveMapping(){
 	global
-	local mapping := fetchMappingFromConfig(CONFIG_PATH, KEYMAP_SECTION)
+	local mapping := loadConfig(CONFIG_PATH, KEYMAP_SECTION)
 	return (mapping != "" ? addMapDefaults(mapping, DEFAULT_MAPPING, true) : cloneMap(DEFAULT_MAPPING))
 }
 
 
-fetchMappingFromConfig(filepath, section){
+saveConfig(){
+	global CONFIG_PATH, KEYMAP_SECTION, ORIG_KEYS, ActiveMapping
+
+	configObj := {(KEYMAP_SECTION): map(reverseMap(ORIG_KEYS), ActiveMapping)}
+	if(!writeINI(CONFIG_PATH, configObj)){
+		throw Exception("Unable to save configuration")
+	}
+}
+
+
+loadConfig(filepath, section){
 	global origKeys
 
 	if(!FileExist(filepath)){
