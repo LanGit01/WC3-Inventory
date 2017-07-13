@@ -24,22 +24,14 @@ activeMapping := ""
 rActiveMapping := rDefaultMapping
 
 ; Fetch config file
-if(FileExist(CONFIG_PATH)){
-	try{
-		config := readINI(CONFIG_PATH)
-		if(config.HasKey(KEYMAP_SECTION)){
-			rActiveMapping := addMapDefaults(map(origKeys, config[KEYMAP_SECTION]), rDefaultMapping, true)
-		}
-	}catch e{
-		; Not a even a bite...
-	}
-}
+rActiveMapping := constructActiveMapping()
+hotkeyLookup := reverseMap(rActiveMapping)
 
-hotkeyLookup := activeMapping := reverseMap(rActiveMapping)
+;hotkeyLookup := activeMapping := reverseMap(rActiveMapping)
 
 ; Remove duplicates here
 
-MsgBox, % deepPrintObject(activeMapping)
+MsgBox, % deepPrintObject(hotkeyLookup)
 
 /*
  	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
@@ -54,13 +46,44 @@ Exit
 ;==========================================
 
 hotkey_press:
-
 	Send, % hotkeyMap[A_ThisHotkey]
 return
+
+
+
 
 ;==========================================
 ;				Functions
 ;==========================================
+
+constructActiveMapping(){
+	global CONFIG_PATH, KEYMAP_SECTION, rDefaultMapping
+
+	mapping := fetchMappingFromConfig(CONFIG_PATH, KEYMAP_SECTION)
+	return (mapping != "" ? addMapDefaults(mapping, rDefaultMapping, true) : rDefaultMapping)
+}
+
+
+fetchMappingFromConfig(filepath, section){
+	global origKeys
+
+	if(!FileExist(filepath)){
+		return
+	}
+
+	config := mapping := ""
+
+	try{
+		config := readINI(filepath)
+		if(config.HasKey(section)){
+			mapping := map(origKeys, config[section])
+		}
+	}catch e{
+		return
+	}
+
+	return mapping
+}
 
 /*
  *	Function: map
@@ -130,26 +153,6 @@ hasValue(obj, sVal){
 	return false
 }
 
-
-/*
-setHotkey(key, targetLabel){
-	ErrorLevel := 0
-	Hotkey, %key%, %targetlabel%, UseErrorLevel
-	return ErrorLevel
-}
-
-createHotkeys(keymap, targetLabel, enabled := false){
-	For , value in keys{
-		if(enabled){
-			Hotkey, %value%, %targetLabel%, On
-		}else{
-			Hotkey, %value%, %targetLabel%, Off
-		}		
-	}
-
-	return keymap
-}
-*/
 
 deepPrintObject(obj, level := 1){
 	str := "", pad := ""
