@@ -1,7 +1,11 @@
 #SingleInstance, force
 #NoEnv
 
-ORIG_KEYS := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
+#include w3inventory\W3-Inventory.ahk
+
+;ORIG_KEYS := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
+
+HOTKEY_EDIT_PREFIX := "HKEdit"
 
 ;=================================================
 ;			Calculated Dimensions
@@ -24,21 +28,50 @@ Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % "W3 INVENTORY"
 
 Gui, Font, s%BASE_FONT_SIZE% w400, Tahoma
 Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired hotkeys"
-createHotkeyEditors(ORIG_KEYS)
+createHotkeyEditors(ORIG_KEYS, HOTKEY_EDIT_PREFIX)
 
 Gui, Add, Button, section xm y+20 w%BUTTON_W% r1, % "Save Config"
 Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1, % "Load Default"
 Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
 
+updateHotkeyValues()
+
 Gui, Show
 
 
-createHotkeyEditors(origKeysArray){
+
+createHotkeyEditors(origKeysArray, hkVarPrefix){
 	global
 
+	local varName
+
 	For index, origKey in origKeysArray{
+		varName := hkVarPrefix . Trim(origKey, "{}")
 		Gui, Add, Text, xm y+12 w%HK_LABEL_W%, % "Slot " . index . " (Num " . SubStr(origKey, -1, 1) . "):"
-		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W%
+		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W% v%varName% ghandleHotkeyEdit
+	}
+}
+
+
+handleHotkeyEdit(){
+	capturedHotkey := %A_GuiControl%
+	if capturedHotkey in +,^,!,+^,^!,+^!
+		return
+
+	key := SubStr(A_GuiControl, 0, 1)
+}
+
+updateHotkeyValues(){
+	global ActiveMapping, ORIG_KEYS, HOTKEY_EDIT_PREFIX
+	
+
+	For index, origKey in ORIG_KEYS{
+		hkVarName := HOTKEY_EDIT_PREFIX . Trim(origKey, "{}")
+		if(ActiveMapping.HasKey(origKey)){
+			GuiControl, , %hkVarName%, % ActiveMapping[origKey]
+		}else{
+			GuiControl, , %hkVarName%, 
+		}
 	}
 }
 
