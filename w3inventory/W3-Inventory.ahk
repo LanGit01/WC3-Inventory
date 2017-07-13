@@ -49,7 +49,7 @@ return
 constructActiveMapping(){
 	global
 	local mapping := fetchMappingFromConfig(CONFIG_PATH, KEYMAP_SECTION)
-	return (mapping != "" ? addMapDefaults(mapping, DEFAULT_MAPPING, true) : DEFAULT_MAPPING)
+	return (mapping != "" ? addMapDefaults(mapping, DEFAULT_MAPPING, true) : cloneMap(DEFAULT_MAPPING))
 }
 
 
@@ -83,7 +83,7 @@ fetchMappingFromConfig(filepath, section){
  *	Returns:
  *		a clone of the map
  */
-/*cloneMap(map){
+cloneMap(map){
 	clonedMap := {}
 
 	For key, value in map{
@@ -91,7 +91,7 @@ fetchMappingFromConfig(filepath, section){
 	}
 
 	return clonedMap
-}*/
+}
 
 /*
  *	Function: map
