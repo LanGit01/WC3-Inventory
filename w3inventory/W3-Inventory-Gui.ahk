@@ -1,6 +1,48 @@
 #SingleInstance, force
 #NoEnv
 
+ORIG_KEYS := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
+
+;=================================================
+;			Calculated Dimensions
+;=================================================
+MARGIN_X := MARGIN_Y := 12
+BASE_FONT_SIZE := 10
+TITLE_FONT_SIZE := BASE_FONT_SIZE * 1.5
+HK_LABEL_W := BASE_FONT_SIZE * 14
+HK_MARGIN := 20
+HK_W := BASE_FONT_SIZE * 14
+CONTENT_W := HK_LABEL_W + HK_MARGIN + HK_W
+BUTTON_MARGIN := 20
+BUTTON_W := Floor((HK_LABEL_W + HK_MARGIN + HK_W - BUTTON_MARGIN) / 2)
+
+Gui, New, , % "Test"
+Gui, Margin, %MARGIN_X%, %MARGIN_Y%
+
+Gui, Font, s%TITLE_FONT_SIZE% w700, Verdana
+Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % "W3 INVENTORY"
+
+Gui, Font, s%BASE_FONT_SIZE% w400, Tahoma
+Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired hotkeys"
+createHotkeyEditors(ORIG_KEYS)
+
+Gui, Add, Button, section xm y+20 w%BUTTON_W% r1, % "Save Config"
+Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1, % "Load Default"
+Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
+
+Gui, Show
+
+
+createHotkeyEditors(origKeysArray){
+	global
+
+	For index, origKey in origKeysArray{
+		Gui, Add, Text, xm y+12 w%HK_LABEL_W%, % "Slot " . index . " (Num " . SubStr(origKey, -1, 1) . "):"
+		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W%
+	}
+}
+
+/*
 FONT_SIZE := 10
 HK_LABELW := FONT_SIZE * 12
 HK_W := FONT_SIZE * 12
@@ -55,71 +97,5 @@ getMax(val1, val2){
 	return (val1 > val2 ? val1)
 }
 
-/*
-
-Gui, Add, Hotkey, vTest
-GuiControlGet, TestVar, Pos, Test
-
-MsgBox, % TestVarX
-
-*/
-
-
-
 Exit
-
-/*
-; Instructions
-;Gui, Add, Text, center, % "Click on the box beside the Inventory slot number and press your hotkey combination"
-
-
-
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1asdasdasdas
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Text, xm y+10 w%HK_LABELW%, Text1
-Gui, Add, Hotkey, x+20 yp-4 w%HK_W% r1 center
-
-Gui, Add, Button, xm, Save Hotkeys
-Gui, Add, Button, x+20 +0x20, Reset Defaults
-Gui, Add, Button, , Start W3Inventory*/
-
-/*
-Label:
-	MsgBox, % A_GuiControl
-return
-
-hkEdit(){
-	varName := A_GuiControl
-	key := StrReplace(varName, "HK", , , 1)
-	MsgBox, % key
-}
-
-GUIcreateHotkeyInputs(mapping, pseudoArrName, hkLabel){
-	global
-	local hotkeyVarName, key, value
-
-	For key in mapping{
-		hotkeyVarName := pseudoArrName . key
-
-		Gui, Add, Text, xm, Slot %key%
-		Gui, Add, Hotkey, v%hotkeyVarName% g%hkLabel%
-	}
-}
 */
