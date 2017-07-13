@@ -21,14 +21,11 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 ActiveMapping := constructActiveMapping()
 hotkeyLookup := reverseMap(ActiveMapping)
 
+MsgBox % deepPrintObject(activeMapping)
+MsgBox % (setHotkeyMapping(1, "!w") ? "true" : "false")
+MsgBox % deepPrintObject(activeMapping)
+MsgBox % deepPrintObject(hotkeyLookup)
 
-;MsgBox, % deepPrintObject(activeMapping)
-
-/*
- 	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
-	- addMapDefaults (possible: duplicate new key)
-	- reverse
-*/
 
 
 
@@ -47,7 +44,34 @@ return
 ;				Functions
 ;==========================================
 
+setHotkeyMapping(slotNum, hkString){
+	global ORIG_KEYS, ActiveMapping, hotkeyLookup
 
+	if(!ORIG_KEYS.HasKey(slotNum)){
+		return false
+	}
+
+	origKey := ORIG_KEYS[slotNum]
+	hkOldActive := ActiveMapping[origKey]
+
+	if(hkString = hkOldActive){
+		; Same mapping
+		return false
+	}
+
+	hotkeyLookup.Delete(hkOldActive)
+	duplicateOrigKey := hotkeyLookup[hkString]
+
+	hotkeyLookup[hkString] := origKey
+	ActiveMapping[origKey] := hkString
+
+	; Update ActiveMapping
+	if(duplicateOrigKey != ""){
+		ActiveMapping[duplicateOrigKey] := ""
+	}
+
+	return true
+}
 
 constructActiveMapping(){
 	global
@@ -165,6 +189,8 @@ hasValue(obj, sVal){
 }
 
 keyOf(obj, sVal){
+	; Key can be "" or 0 (?) so cannot be as
+	; reliable for checking if object has value
 	For key in obj{
 		if(obj[key] = sVal){
 			return key
