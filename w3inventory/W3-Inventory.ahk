@@ -10,28 +10,18 @@ TEMP_DIR_PATH := "w3inventory\"
 CONFIG_PATH := TEMP_DIR_PATH . "keymap.ini"
 KEYMAP_SECTION := "keymap"
 
+; DEFAULTS
 ; Inventory item slots' shortcut keys. Index corresponds to slot number.
-origKeys := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
-defaultHotkeys := ["!q", "!w", "!a", "!s", "!z", "!x"]
+ORIG_KEYS := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
+DEFAULT_HOTKEYS := ["!q", "!w", "!a", "!s", "!z", "!x"]
 
-testMapping := ["!q", "!w", "!a", "!s", "!z", "!x", "!h", "!j"]
+; Default mapping
+DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 
-; Default mapping [hotkey:origkey]
-defaultMapping := map(defaultHotkeys, origKeys)
-rDefaultMapping := reverseMap(defaultMapping)
+activeMapping := constructActiveMapping()
+hotkeyLookup := reverseMap(activeMapping)
 
-activeMapping := ""
-rActiveMapping := rDefaultMapping
-
-; Fetch config file
-rActiveMapping := constructActiveMapping()
-hotkeyLookup := reverseMap(rActiveMapping)
-
-;hotkeyLookup := activeMapping := reverseMap(rActiveMapping)
-
-; Remove duplicates here
-
-MsgBox, % deepPrintObject(hotkeyLookup)
+MsgBox, % deepPrintObject(activeMapping)
 
 /*
  	- map origKeys:newKeys (possible: no mapped key, duplicate new key)
@@ -39,7 +29,7 @@ MsgBox, % deepPrintObject(hotkeyLookup)
 	- reverse
 */
 
-Exit
+
 
 ;==========================================
 ;				Subroutines
@@ -57,10 +47,9 @@ return
 ;==========================================
 
 constructActiveMapping(){
-	global CONFIG_PATH, KEYMAP_SECTION, rDefaultMapping
-
-	mapping := fetchMappingFromConfig(CONFIG_PATH, KEYMAP_SECTION)
-	return (mapping != "" ? addMapDefaults(mapping, rDefaultMapping, true) : rDefaultMapping)
+	global
+	local mapping := fetchMappingFromConfig(CONFIG_PATH, KEYMAP_SECTION)
+	return (mapping != "" ? addMapDefaults(mapping, DEFAULT_MAPPING, true) : DEFAULT_MAPPING)
 }
 
 
@@ -84,6 +73,25 @@ fetchMappingFromConfig(filepath, section){
 
 	return mapping
 }
+
+/*
+ *	Function: cloneMap
+ *
+ *	Clones a map (key-value pair) object. This is a shallow copy and does not clone 
+ *	the contents of the object beyond the first level.
+ *
+ *	Returns:
+ *		a clone of the map
+ */
+/*cloneMap(map){
+	clonedMap := {}
+
+	For key, value in map{
+		clonedMap[key] := value
+	}
+
+	return clonedMap
+}*/
 
 /*
  *	Function: map
