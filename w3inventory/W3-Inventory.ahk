@@ -21,10 +21,14 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 ActiveMapping := constructActiveMapping()
 hotkeyLookup := reverseMap(ActiveMapping)
 
+/*
 MsgBox % deepPrintObject(activeMapping)
 MsgBox % (setHotkeyMapping(1, "!w") ? "true" : "false")
 MsgBox % deepPrintObject(activeMapping)
 MsgBox % deepPrintObject(hotkeyLookup)
+*/
+
+saveConfig()
 
 
 
@@ -43,6 +47,15 @@ return
 ;==========================================
 ;				Functions
 ;==========================================
+
+saveConfig(){
+	global CONFIG_PATH, KEYMAP_SECTION, ORIG_KEYS, ActiveMapping
+
+	configObj := {(KEYMAP_SECTION): map(reverseMap(ORIG_KEYS), ActiveMapping)}
+	if(!writeINI(CONFIG_PATH, configObj)){
+		throw Exception("Unable to save configuration")
+	}
+}
 
 setHotkeyMapping(slotNum, hkString){
 	global ORIG_KEYS, ActiveMapping, hotkeyLookup
