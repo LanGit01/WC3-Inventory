@@ -21,27 +21,6 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 ActiveMapping := constructActiveMapping()
 HotkeyLookup := reverseMap(ActiveMapping)
 
-/*
-MsgBox % deepPrintObject(activeMapping)
-MsgBox % (setHotkeyMapping(1, "!w") ? "true" : "false")
-MsgBox % deepPrintObject(activeMapping)
-MsgBox % deepPrintObject(HotkeyLookup)
-*/
-
-startHotkeys()
-
-;==========================================
-;				Subroutines
-;==========================================
-
-/*hotkey_press:
-	Send, % hotkeyMap[A_ThisHotkey]
-return
-*/
-
-
-
-
 ;==========================================
 ;				Functions
 ;==========================================
