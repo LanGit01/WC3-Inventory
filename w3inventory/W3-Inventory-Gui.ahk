@@ -32,7 +32,7 @@ STARTBUTTON_W := CONTENT_W
 ;====================================
 ;			GUI Creation
 ;====================================
-Gui, New, , % "W3 Inventory"
+Gui, W3Inventory:New, , % "W3 Inventory"
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
 ; Title
@@ -51,8 +51,17 @@ Gui, Add, Button, xm w%CONTENT_W% r2 vstartButton gbuttonToggleHotkeys, % "START
 
 updateHotkeyValues()
 
-Gui, Show
+Menu, Tray, NoStandard
+Menu, Tray, Add, % "Show Window", showGui
+Menu, Tray, Standard
+Menu, Tray, Default, % "Show Window"
 
+GoSub showGui
+Exit
+
+showGui:
+	Gui, W3Inventory:Show
+return
 
 ;===================================
 ;			gLabel Functions
