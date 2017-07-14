@@ -29,13 +29,28 @@ Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired
 createHotkeyEditors(ORIG_KEYS, HOTKEY_EDIT_PREFIX)
 
 Gui, Add, Button, section xm y+20 w%BUTTON_W% r1, % "Save Config"
-Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1, % "Load Default"
+Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1 gbuttonSaveConfig, % "Load Default"
 Gui, Add, Button, xm w%CONTENT_W% r2 gbuttonStartHotkeys, % "START"
 
 updateHotkeyValues()
 
 Gui, Show
 
+buttonSaveConfig(){
+	MsgBox, Saving
+
+
+	try{
+		saveConfig()	
+	}catch e{
+		MsgBox, % e.Message
+	}
+	
+}
+
+buttonLoadDefault(){
+
+}
 
 buttonStartHotkeys(){
 	startHotkeys()
