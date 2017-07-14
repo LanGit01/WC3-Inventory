@@ -1,7 +1,7 @@
 #SingleInstance, force
 #NoEnv
 
-#include lib\ini-parser.ahk
+#include %A_ScriptDir%\..\lib\ini-parser.ahk
 
 ;===================================
 ;			Constants
