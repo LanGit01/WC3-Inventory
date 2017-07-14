@@ -21,9 +21,12 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 ActiveMapping := constructActiveMapping()
 HotkeyLookup := reverseMap(ActiveMapping)
 
-;==========================================
-;				Functions
-;==========================================
+MsgBox, % deepPrintObject(constructActiveMapping())
+
+;=======================================
+;		Script-specific Functions
+;=======================================
+
 hotkeyPress(){
 	global HotkeyLookup
 
@@ -78,15 +81,16 @@ setHotkeyMapping(slotNum, hkString){
 		return false
 	}
 
-	HotkeyLookup.Delete(hkOldActive)
-	duplicateOrigKey := HotkeyLookup[hkString]
+	HotkeyLookup.Delete(hkOldActive)			; Delete mapping to the to-be-replaced key
+	previousOrigKey := HotkeyLookup[hkString]
 
+	; Create new mapping
 	HotkeyLookup[hkString] := origKey
 	ActiveMapping[origKey] := hkString
 
-	; Update ActiveMapping
-	if(duplicateOrigKey != ""){
-		ActiveMapping[duplicateOrigKey] := ""
+	; Remove duplicate from ActiveMapping
+	if(previousOrigKey != ""){
+		ActiveMapping[previousOrigKey] := ""
 	}
 
 	return true
@@ -95,7 +99,7 @@ setHotkeyMapping(slotNum, hkString){
 constructActiveMapping(){
 	global
 	local mapping := loadConfig(CONFIG_PATH, KEYMAP_SECTION)
-	return (mapping != "" ? addMapDefaults(mapping, DEFAULT_MAPPING, true) : cloneMap(DEFAULT_MAPPING))
+	return (mapping != "" ? addDefaultValues(mapping, DEFAULT_MAPPING, true) : cloneMap(DEFAULT_MAPPING))
 }
 
 
@@ -129,6 +133,10 @@ loadConfig(filepath, section){
 
 	return mapping
 }
+
+;=======================================
+;			Helper Functions
+;=======================================
 
 /*
  *	Function: cloneMap
@@ -197,10 +205,10 @@ reverseMap(obj){
  *	Returns:
  *		The object `map` with the added defaults
  */
-addMapDefaults(map, defaults, unique := false){
-	For key in defaults{
-		if(!map.HasKey(key) && (!unique || (unique && !hasValue(map, defaults[key])))){
-			map[key] := defaults[key]
+addDefaultValues(map, defaultValues, unique := false){
+	For key, value in defaultValues{
+		if(!map.HasKey(key) && (!unique || (unique && !hasValue(map, value)))){
+			map[key] := value
 		}
 	}
 
