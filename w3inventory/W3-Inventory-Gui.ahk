@@ -34,6 +34,10 @@ Gui, Add, Button, section xm y+20 w%BUTTON_W% r1, % "Save Config"
 Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1, % "Load Default"
 Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
 
+ActiveMapping["{Numpad7}"] := ""
+HotkeyLookup.Delete("!q")
+
+
 updateHotkeyValues()
 
 Gui, Show
@@ -67,11 +71,7 @@ updateHotkeyValues(){
 
 	For index, origKey in ORIG_KEYS{
 		hkVarName := HOTKEY_EDIT_PREFIX . index
-		if(ActiveMapping.HasKey(origKey)){
-			GuiControl, , %hkVarName%, % ActiveMapping[origKey]
-		}else{
-			GuiControl, , %hkVarName%, 
-		}
+		GuiControl, , %hkVarName%, % ActiveMapping[origKey]
 	}
 }
 
