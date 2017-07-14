@@ -69,7 +69,7 @@ toggleHotkeys(hkEnabled := true){
 		if(ErrorLevel = 0){
 			toggledHotkeys[hk] := true
 		}else
-		if(ErrorLEvel = 2){
+		if(ErrorLevel = 2){
 			toggledHotkeys[hk] := false
 		}else{
 			throw Exception(ErrorLevel)
@@ -78,7 +78,7 @@ toggleHotkeys(hkEnabled := true){
 
 	W3_HOTKEYS_ACTIVE := hkEnabled
 
-	return toggledHotkeys := {}
+	return toggledHotkeys
 }
 
 resetHotkeysToDefault(){
