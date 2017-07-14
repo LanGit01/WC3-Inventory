@@ -43,8 +43,8 @@ Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired
 
 createHotkeyEditors()
 
-Gui, Add, Button, section xm y+20 w%SLBUTTON_W% r1, % "Save Config"
-Gui, Add, Button, x+%SLBUTTON_MARGIN% w%SLBUTTON_W% r1 gbuttonSaveConfig, % "Load Default"
+Gui, Add, Button, section xm y+20 w%SLBUTTON_W% r1 gbuttonSaveMapping, % "Save Mapping"
+Gui, Add, Button, x+%SLBUTTON_MARGIN% w%SLBUTTON_W% r1 gbuttonLoadDefault, % "Load Default"
 Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
 
 updateHotkeyValues()
@@ -56,15 +56,22 @@ Gui, Show
 ;			gLabel Functions
 ;===================================
 
-
-buttonSaveConfig(){
+buttonSaveMapping(){
 	try{
-		saveConfig()	
+		saveConfig()
+		MsgBox, , Save Mapping, Mapping Saved
 	}catch e{
-		MsgBox, % "Error in saving.`n" . e.Message
+		MsgBox, , Save Mapping, % "Error in saving.`n" . e.Message
 	}
 }
 
+buttonLoadDefault(){
+	if(resetHotkeysToDefault()){
+		updateHotkeyValues()
+	}else{
+		MsgBox, , Load Default, % "Cannot edit hotkeys while running!"
+	}
+}
 
 ;===================================
 ;			Functions
