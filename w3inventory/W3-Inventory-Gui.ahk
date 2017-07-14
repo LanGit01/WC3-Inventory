@@ -43,12 +43,9 @@ Gui, Show
 createHotkeyEditors(origKeysArray, hkVarPrefix){
 	global
 
-	local varName
-
 	For index, origKey in origKeysArray{
-		varName := hkVarPrefix . Trim(origKey, "{}")
 		Gui, Add, Text, xm y+12 w%HK_LABEL_W%, % "Slot " . index . " (Num " . SubStr(origKey, -1, 1) . "):"
-		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W% v%varName% ghandleHotkeyEdit
+		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W% v%hkVarPrefix%%index% ghandleHotkeyEdit
 	}
 }
 
@@ -59,6 +56,9 @@ handleHotkeyEdit(){
 		return
 
 	key := SubStr(A_GuiControl, 0, 1)
+	if(setHotkeyMapping(key, capturedHotkey)){
+		updateHotkeyValues()
+	}
 }
 
 updateHotkeyValues(){
@@ -66,7 +66,7 @@ updateHotkeyValues(){
 	
 
 	For index, origKey in ORIG_KEYS{
-		hkVarName := HOTKEY_EDIT_PREFIX . Trim(origKey, "{}")
+		hkVarName := HOTKEY_EDIT_PREFIX . index
 		if(ActiveMapping.HasKey(origKey)){
 			GuiControl, , %hkVarName%, % ActiveMapping[origKey]
 		}else{
