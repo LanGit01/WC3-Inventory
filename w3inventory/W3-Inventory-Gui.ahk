@@ -3,6 +3,8 @@
 
 #include w3inventory\W3-Inventory.ahk
 
+HKREMAP_RUNNING := false
+
 ;===================================
 ;			Constants
 ;===================================
@@ -30,7 +32,7 @@ STARTBUTTON_W := CONTENT_W
 ;====================================
 ;			GUI Creation
 ;====================================
-Gui, New, , % "Test"
+Gui, New, , % "W3 Inventory"
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
 ; Title
@@ -45,7 +47,7 @@ createHotkeyEditors()
 
 Gui, Add, Button, section xm y+20 w%SLBUTTON_W% r1 gbuttonSaveMapping, % "Save Mapping"
 Gui, Add, Button, x+%SLBUTTON_MARGIN% w%SLBUTTON_W% r1 gbuttonLoadDefault, % "Load Default"
-Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
+Gui, Add, Button, xm w%CONTENT_W% r2 vstartButton gbuttonToggleHotkeys, % "START"
 
 updateHotkeyValues()
 
@@ -73,9 +75,43 @@ buttonLoadDefault(){
 	}
 }
 
+buttonToggleHotkeys(){
+	global HKREMAP_RUNNING
+
+	toggleStatus := toggleHotkeys(!HKREMAP_RUNNING)
+	errorString := ""	
+
+	if(toggleStatus){
+		HKREMAP_RUNNING := !HKREMAP_RUNNING
+		
+		; Display errors here
+		For key, value in toggleStatus{
+			
+		}
+
+		GuiControl, , startButton, % (HKREMAP_RUNNING ? "STOP" : "START")
+		toggleEnableHotkeyEditors(!HKREMAP_RUNNING)
+	}
+
+	
+}
+
 ;===================================
 ;			Functions
 ;===================================
+
+toggleEnableHotkeyEditors(enable := true){
+	global
+	local index
+
+	For index in ORIG_KEYS{
+		if(enable){
+			GuiControl, Enable, %HOTKEY_EDIT_PREFIX%%index%
+		}else{
+			GuiControl, Disable, %HOTKEY_EDIT_PREFIX%%index%
+		}
+	}
+}
 
 createHotkeyEditors(){
 	global
