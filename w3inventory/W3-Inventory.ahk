@@ -10,6 +10,9 @@ TEMP_DIR_PATH := "w3inventory\"
 CONFIG_PATH := TEMP_DIR_PATH . "keymap.ini"
 KEYMAP_SECTION := "keymap"
 
+; Read-Only Globals
+W3_HOTKEYS_ACTIVE := false
+
 ; DEFAULTS
 ; Inventory item slots' shortcut keys. Index corresponds to slot number.
 ORIG_KEYS := ["{Numpad7}", "{Numpad8}", "{Numpad4}", "{Numpad5}", "{Numpad1}", "{Numpad2}"]
@@ -20,8 +23,6 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 
 ActiveMapping := constructActiveMapping()
 HotkeyLookup := reverseMap(ActiveMapping)
-
-MsgBox, % deepPrintObject(constructActiveMapping())
 
 ;=======================================
 ;		Script-specific Functions
@@ -43,33 +44,59 @@ hotkeyPress(){
  *		status as values. True if hotkey is valid and is installed,
  *		false otherwise
  */
-startHotkeys(){
-	global HotkeyLookup
 
-	installedHotkeys := {}
+
+toggleHotkeys(hkEnabled := true){
+	global HotkeyLookup, W3_HOTKEYS_ACTIVE
+
+	; Force to boolean
+	hkEnabled := !!hkEnabled
+	if(hkEnabled = W3_HOTKEYS_ACTIVE){
+		return false
+	}
+
+	toggledHotkeys := {}
 
 	For hk in HotkeyLookup{
 		ErrorLevel := 0
-		Hotkey, %hk%, hotkeyPress, ON UseErrorLevel
-
+		if(hkEnabled){
+			Hotkey, %hk%, hotkeyPress, ON UseErrorLevel
+		}else{
+			Hotkey, %hk%, hotkeyPress, OFF UseErrorLevel
+		}
 
 		if(ErrorLevel = 0){
-			installedHotkeys[hk] := true
+			toggledHotkeys[hk] := true
 		}else
-		if(ErrorLevel = 2){
-			installedHotkeys[hk] := false
+		if(ErrorLEvel = 2){
+			toggledHotkeys[hk] := false
 		}else{
 			throw Exception(ErrorLevel)
 		}
 	}
 
-	return installedHotkeys
+	W3_HOTKEYS_ACTIVE := hkEnabled
+
+	return toggledHotkeys := {}
+}
+
+
+
+resetHotkeysToDefault(){
+	global
+
+	ActiveMapping := cloneMap(DEFAULT_MAPPING)
+	HotkeyLookup := reverseMap(ActiveMapping)
 }
 
 setHotkeyMapping(slotNum, hkString){
-	global ORIG_KEYS, ActiveMapping, HotkeyLookup
+	global ORIG_KEYS, ActiveMapping, HotkeyLookup, W3_HOTKEYS_ACTIVE
 
-	if(!ORIG_KEYS.HasKey(slotNum)){
+	if(W3_HOTKEYS_ACTIVE){
+		MsgBox RUNNING. Cannot change hotkeys.
+	}
+
+	if(W3_HOTKEYS_ACTIVE || !ORIG_KEYS.HasKey(slotNum)){
 		return false
 	}
 
