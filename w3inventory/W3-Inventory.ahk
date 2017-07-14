@@ -110,7 +110,7 @@ saveConfig(){
 
 
 loadConfig(filepath, section){
-	global origKeys
+	global ORIG_KEYS
 
 	if(!FileExist(filepath)){
 		return
@@ -121,7 +121,7 @@ loadConfig(filepath, section){
 	try{
 		config := readINI(filepath)
 		if(config.HasKey(section)){
-			mapping := map(origKeys, config[section])
+			mapping := map(ORIG_KEYS, config[section])
 		}
 	}catch e{
 		return
