@@ -3,65 +3,80 @@
 
 #include w3inventory\W3-Inventory.ahk
 
+;===================================
+;			Constants
+;===================================
 HOTKEY_EDIT_PREFIX := "HKEdit"
+
 
 ;=================================================
 ;			Calculated Dimensions
 ;=================================================
-MARGIN_X := MARGIN_Y := 12
 BASE_FONT_SIZE := 10
 TITLE_FONT_SIZE := BASE_FONT_SIZE * 1.5
-HK_LABEL_W := BASE_FONT_SIZE * 14
-HK_MARGIN := 20
-HK_W := BASE_FONT_SIZE * 14
-CONTENT_W := HK_LABEL_W + HK_MARGIN + HK_W
-BUTTON_MARGIN := 20
-BUTTON_W := Floor((HK_LABEL_W + HK_MARGIN + HK_W - BUTTON_MARGIN) / 2)
 
+MARGIN_X := MARGIN_Y := 12
+
+HKE_LABEL_W := BASE_FONT_SIZE * 14
+HKE_MARGIN := 20
+HKE_W := BASE_FONT_SIZE * 14
+
+CONTENT_W := HKE_LABEL_W + HKE_MARGIN + HKE_W
+
+SLBUTTON_MARGIN := 20
+SLBUTTON_W := Floor((HKE_LABEL_W + HKE_MARGIN + HKE_W - SLBUTTON_MARGIN) / 2)
+STARTBUTTON_W := CONTENT_W
+
+;====================================
+;			GUI Creation
+;====================================
 Gui, New, , % "Test"
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
+; Title
 Gui, Font, s%TITLE_FONT_SIZE% w700, Verdana
 Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % "W3 INVENTORY"
 
+; Instructions
 Gui, Font, s%BASE_FONT_SIZE% w400, Tahoma
 Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired hotkeys"
-createHotkeyEditors(ORIG_KEYS, HOTKEY_EDIT_PREFIX)
 
-Gui, Add, Button, section xm y+20 w%BUTTON_W% r1, % "Save Config"
-Gui, Add, Button, x+%BUTTON_MARGIN% w%BUTTON_W% r1 gbuttonSaveConfig, % "Load Default"
-Gui, Add, Button, xm w%CONTENT_W% r2 gbuttonStartHotkeys, % "START"
+createHotkeyEditors()
+
+Gui, Add, Button, section xm y+20 w%SLBUTTON_W% r1, % "Save Config"
+Gui, Add, Button, x+%SLBUTTON_MARGIN% w%SLBUTTON_W% r1 gbuttonSaveConfig, % "Load Default"
+Gui, Add, Button, xm w%CONTENT_W% r2, % "START"
 
 updateHotkeyValues()
 
 Gui, Show
 
+
+;===================================
+;			gLabel Functions
+;===================================
+
+
 buttonSaveConfig(){
-	MsgBox, Saving
-
-
 	try{
 		saveConfig()	
 	}catch e{
-		MsgBox, % e.Message
+		MsgBox, % "Error in saving.`n" . e.Message
 	}
-	
 }
 
-buttonLoadDefault(){
 
-}
+;===================================
+;			Functions
+;===================================
 
-buttonStartHotkeys(){
-	startHotkeys()
-}
-
-createHotkeyEditors(origKeysArray, hkVarPrefix){
+createHotkeyEditors(){
 	global
+	local yMargin := MARGIN_Y + 4
 
-	For index, origKey in origKeysArray{
-		Gui, Add, Text, xm y+12 w%HK_LABEL_W%, % "Slot " . index . " (Num " . SubStr(origKey, -1, 1) . "):"
-		Gui, Add, Hotkey, x+%HK_MARGIN% yp-4 w%HK_W% v%hkVarPrefix%%index% ghandleHotkeyEdit
+	For index, origKey in ORIG_KEYS{
+		Gui, Add, Text, xm y+%yMargin% w%HKE_LABEL_W%, % "Slot " . index . " (Num " . SubStr(origKey, -1, 1) . "):"
+		Gui, Add, Hotkey, x+%HKE_MARGIN% yp-4 w%HKE_W% v%HOTKEY_EDIT_PREFIX%%index% ghandleHotkeyEdit
 	}
 }
 
