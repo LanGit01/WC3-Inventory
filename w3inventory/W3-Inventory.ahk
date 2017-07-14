@@ -24,6 +24,7 @@ DEFAULT_MAPPING := map(ORIG_KEYS, DEFAULT_HOTKEYS)
 ActiveMapping := constructActiveMapping()
 HotkeyLookup := reverseMap(ActiveMapping)
 
+
 ;=======================================
 ;		Script-specific Functions
 ;=======================================
@@ -80,13 +81,16 @@ toggleHotkeys(hkEnabled := true){
 	return toggledHotkeys := {}
 }
 
-
-
 resetHotkeysToDefault(){
 	global
 
+	if(W3_HOTKEYS_ACTIVE){
+		return false
+	}
+
 	ActiveMapping := cloneMap(DEFAULT_MAPPING)
 	HotkeyLookup := reverseMap(ActiveMapping)
+	return true
 }
 
 setHotkeyMapping(slotNum, hkString){
