@@ -32,7 +32,7 @@ STARTBUTTON_W := CONTENT_W
 ;====================================
 ;			GUI Creation
 ;====================================
-Gui, W3Inventory:New, , % "W3 Inventory"
+Gui, W3Inventory: New, HwndGuiHwnd, % "W3 Inventory"
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
 ; Title
@@ -41,7 +41,8 @@ Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % "W3 INVENTORY"
 
 ; Instructions
 Gui, Font, s%BASE_FONT_SIZE% w400, Tahoma
-Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Click on the box and press desired hotkeys"
+Gui, Add, Text, xm w%CONTENT_W% r1 center, % "Press ESC to minimize to tray"
+Gui, Add, Text, xm y+0 w%CONTENT_W% r1 center, % "Click on the box and press desired hotkeys"
 
 createHotkeyEditors()
 
@@ -61,6 +62,16 @@ Exit
 
 showGui:
 	Gui, W3Inventory:Show
+return
+
+W3InventoryGuiEscape:
+	Gui, W3Inventory:Cancel
+return
+
+W3InventoryGuiClose:
+	MsgBox, 0x4, % "Exit Prompt", % "Do you really want to exit?"
+	IfMsgBox, Yes
+		ExitApp
 return
 
 ;===================================
