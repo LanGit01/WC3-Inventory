@@ -8,6 +8,8 @@ HKREMAP_RUNNING := false
 ;===================================
 ;			Constants
 ;===================================
+APP_VERSION := "0.2.1"
+APP_TITLE := "WC3 Inventory"
 HOTKEY_EDIT_PREFIX := "HKEdit"
 
 
@@ -32,12 +34,12 @@ STARTBUTTON_W := CONTENT_W
 ;====================================
 ;			GUI Creation
 ;====================================
-Gui, W3Inventory: New, HwndGuiHwnd, % "W3 Inventory"
+Gui, W3Inventory: New, HwndGuiHwnd, % APP_TITLE . " v" . APP_VERSION
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
 ; Title
 Gui, Font, s%TITLE_FONT_SIZE% w700, Verdana
-Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % "W3 INVENTORY"
+Gui, Add, Text, xm ym w%CONTENT_W% r1 center, % Format("{:U}", APP_TITLE)
 
 ; Instructions
 Gui, Font, s%BASE_FONT_SIZE% w400, Tahoma
@@ -48,7 +50,10 @@ createHotkeyEditors()
 
 Gui, Add, Button, section xm y+20 w%SLBUTTON_W% r1 gbuttonSaveMapping, % "Save Mapping"
 Gui, Add, Button, x+%SLBUTTON_MARGIN% w%SLBUTTON_W% r1 gbuttonLoadDefault, % "Load Default"
+
+Gui, Font, bold
 Gui, Add, Button, xm w%CONTENT_W% r2 vstartButton gbuttonToggleHotkeys, % "START"
+Gui, Font, normal
 
 updateHotkeyValues()
 
