@@ -6,8 +6,8 @@
 ;===================================
 ;			Constants
 ;===================================
-TEMP_DIR_PATH := "w3inventory\"
-CONFIG_PATH := TEMP_DIR_PATH . "keymap.ini"
+DIR_PATH := ""
+CONFIG_PATH := DIR_PATH . "keymap.ini"
 KEYMAP_SECTION := "keymap"
 
 ; Read-Only Globals
