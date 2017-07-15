@@ -83,17 +83,17 @@ writeINI(filepath, configObj){
 			numPairs := countKeys(configObj[Section])
 
 			if(numPairs > 0){
-				iniStr .= "`n"
+				iniStr .= "`r`n"
 			}
 		}else{
-			iniStr .= "`n"
+			iniStr .= "`r`n"
 		}
 
 		For Key, Value in Pair{
 			iniStr .= Key . "=" . Value
 
 			if(numPairs = "" || A_Index < numPairs){
-				iniStr .= "`n"
+				iniStr .= "`r`n"
 			}
 		}
 	}
