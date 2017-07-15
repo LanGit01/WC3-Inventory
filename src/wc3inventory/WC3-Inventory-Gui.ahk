@@ -5,17 +5,19 @@
 
 HKREMAP_RUNNING := false
 
-;===================================
-;			Constants
-;===================================
+;========================================
+;              Constants
+;========================================
+
 APP_VERSION := "0.2.1"
 APP_TITLE := "WC3 Inventory"
 HOTKEY_EDIT_PREFIX := "HKEdit"
 
 
-;=================================================
-;			Calculated Dimensions
-;=================================================
+;========================================
+;           Layout Values
+;========================================
+
 BASE_FONT_SIZE := 10
 TITLE_FONT_SIZE := BASE_FONT_SIZE * 1.5
 
@@ -31,9 +33,10 @@ SLBUTTON_MARGIN := 20
 SLBUTTON_W := Floor((HKE_LABEL_W + HKE_MARGIN + HKE_W - SLBUTTON_MARGIN) / 2)
 STARTBUTTON_W := CONTENT_W
 
-;====================================
-;			GUI Creation
-;====================================
+;========================================
+;           GUI Creation
+;========================================
+
 Gui, W3Inventory: New, HwndGuiHwnd, % APP_TITLE . " v" . APP_VERSION
 Gui, Margin, %MARGIN_X%, %MARGIN_Y%
 
@@ -74,14 +77,14 @@ W3InventoryGuiEscape:
 return
 
 W3InventoryGuiClose:
-	MsgBox, 0x4, % "Exit Prompt", % "Do you really want to exit?"
+	MsgBox, 0x4, % "Exit", % "Do you really want to exit?"
 	IfMsgBox, Yes
 		ExitApp
 return
 
-;===================================
-;			gLabel Functions
-;===================================
+;========================================
+;           Button Functions
+;========================================
 
 buttonSaveMapping(){
 	try{
@@ -92,6 +95,7 @@ buttonSaveMapping(){
 	}
 }
 
+
 buttonLoadDefault(){
 	if(resetHotkeysToDefault()){
 		updateHotkeyValues()
@@ -99,6 +103,7 @@ buttonLoadDefault(){
 		MsgBox, , Load Default, % "Cannot edit hotkeys while running!"
 	}
 }
+
 
 buttonToggleHotkeys(){
 	global HKREMAP_RUNNING
@@ -121,9 +126,9 @@ buttonToggleHotkeys(){
 	
 }
 
-;===================================
-;			Functions
-;===================================
+;========================================
+;           Hotkey Functions
+;========================================
 
 toggleEnableHotkeyEditors(enable := true){
 	global
@@ -137,6 +142,7 @@ toggleEnableHotkeyEditors(enable := true){
 		}
 	}
 }
+
 
 createHotkeyEditors(){
 	global
@@ -159,6 +165,7 @@ handleHotkeyEdit(){
 		updateHotkeyValues()
 	}
 }
+
 
 updateHotkeyValues(){
 	global ActiveMapping, ORIG_KEYS, HOTKEY_EDIT_PREFIX

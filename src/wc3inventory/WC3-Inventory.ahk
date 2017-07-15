@@ -3,9 +3,9 @@
 
 #include %A_ScriptDir%\lib\ini_parser.ahk
 
-;===================================
-;			Constants
-;===================================
+;========================================
+;              Constants
+;========================================
 DIR_PATH := A_ScriptDir
 CONFIG_PATH := DIR_PATH . "\keymap.ini"
 KEYMAP_SECTION := "keymap"
@@ -25,9 +25,9 @@ ActiveMapping := constructActiveMapping()
 HotkeyLookup := reverseMap(ActiveMapping)
 
 
-;=======================================
-;		Script-specific Functions
-;=======================================
+;========================================
+;            API Functions
+;========================================
 
 hotkeyPress(){
 	global HotkeyLookup
@@ -35,18 +35,17 @@ hotkeyPress(){
 	Send, % HotkeyLookup[A_ThisHotkey]
 }
 
+
 /*
- *	Function: startHotkeys
- *	
- *	Starts the hotkeys mapped in `HotkeyLookup`
+ *	Function toggleHotkeys
+ *
+ *	Start or stop hotkeys on ActiveMapping
  *
  *	Returns:
- *		An object containing the hotkey strings as keys and the
- *		status as values. True if hotkey is valid and is installed,
- *		false otherwise
+ *		An object containing the hotkey strings as keys, and th values:
+ *			true: if hotkey pertaining to the hotkey string is successfully toggled
+ *			false: otherwise
  */
-
-
 toggleHotkeys(hkEnabled := true){
 	global HotkeyLookup, W3_HOTKEYS_ACTIVE
 
@@ -81,6 +80,7 @@ toggleHotkeys(hkEnabled := true){
 	return toggledHotkeys
 }
 
+
 resetHotkeysToDefault(){
 	global
 
@@ -93,6 +93,19 @@ resetHotkeysToDefault(){
 	return true
 }
 
+
+/*
+ *	Function: setHotkeyMapping
+ *
+ *	Maps the hotkey string `hkString` to the `slotNum`
+ *
+ *	Returns:
+ *		true if mapping is changed successfully
+ *		false if 
+ *			- `W3_HOTKEYS_ACTIVE` is true,
+ *			- `slotNum` is invalid
+ *			- no change, i.e new mapping is the same as old mapping
+ */
 setHotkeyMapping(slotNum, hkString){
 	global ORIG_KEYS, ActiveMapping, HotkeyLookup, W3_HOTKEYS_ACTIVE
 
@@ -127,6 +140,16 @@ setHotkeyMapping(slotNum, hkString){
 	return true
 }
 
+
+/*
+ *	Function: constructActiveMapping
+ *	
+ *	Fetches configuration from CONFIG_PATH, and adds missing values with
+ *	the default if necessary.
+ *
+ *	Returns:
+ *		an object that maps the ORIG_KEYS to their hotkeys
+ */
 constructActiveMapping(){
 	global
 	local mapping := loadConfig(CONFIG_PATH, KEYMAP_SECTION)
@@ -134,6 +157,11 @@ constructActiveMapping(){
 }
 
 
+/*
+ *	Function: saveConfig
+ *
+ *	Saves the current `ActiveMapping` to CONFIG_PATH
+ */
 saveConfig(){
 	global CONFIG_PATH, KEYMAP_SECTION, ORIG_KEYS, ActiveMapping
 
@@ -144,6 +172,15 @@ saveConfig(){
 }
 
 
+/*
+ *	Function: loadConfig
+ *
+ *	Fetches the corresponding values for the `ORIG_KEYS`
+ *
+ *	Returns:
+ *		if successful, mapping for the original keys
+ *		otherwise, blank
+ */
 loadConfig(filepath, section){
 	global ORIG_KEYS
 
@@ -165,9 +202,9 @@ loadConfig(filepath, section){
 	return mapping
 }
 
-;=======================================
-;			Helper Functions
-;=======================================
+;========================================
+;           Helper Functions
+;========================================
 
 /*
  *	Function: cloneMap
@@ -187,6 +224,7 @@ cloneMap(map){
 
 	return clonedMap
 }
+
 
 /*
  *	Function: map
@@ -211,6 +249,7 @@ map(keys, values){
 	return remap
 }
 
+
 /*
  *	Function: reverseMap
  *
@@ -227,6 +266,7 @@ reverseMap(obj){
 
 	return reversemap
 }
+
 
 /*
  *	Function: addMapDefaults
@@ -246,6 +286,7 @@ addDefaultValues(map, defaultValues, unique := false){
 	return map
 }
 
+
 hasValue(obj, sVal){
 	For key in obj{
 		if(obj[key] = sVal){
@@ -255,6 +296,7 @@ hasValue(obj, sVal){
 
 	return false
 }
+
 
 keyOf(obj, sVal){
 	; Key can be "" or 0 (?) so cannot be as
