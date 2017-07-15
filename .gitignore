@@ -1,2 +1,4 @@
-*.txt
-*.exe
+**/*.txt
+**/*.exe
+**/*.ini
+test.*
