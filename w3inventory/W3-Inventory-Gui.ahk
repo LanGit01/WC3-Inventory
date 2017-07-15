@@ -1,7 +1,7 @@
 #SingleInstance, force
 #NoEnv
 
-#include w3inventory\W3-Inventory.ahk
+#include %A_ScriptDir%\W3-Inventory.ahk
 
 HKREMAP_RUNNING := false
 

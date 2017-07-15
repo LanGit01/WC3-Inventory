@@ -6,8 +6,8 @@
 ;===================================
 ;			Constants
 ;===================================
-DIR_PATH := ""
-CONFIG_PATH := DIR_PATH . "keymap.ini"
+DIR_PATH := A_ScriptDir
+CONFIG_PATH := DIR_PATH . "\keymap.ini"
 KEYMAP_SECTION := "keymap"
 
 ; Read-Only Globals
