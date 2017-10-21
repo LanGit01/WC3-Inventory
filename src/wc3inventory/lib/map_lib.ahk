@@ -40,7 +40,13 @@ cloneMap(map){
 	return clonedMap
 }
 
-
+/**
+ *	Function: hasValue
+ *
+ *	Returns:
+ *		true if the object mapping has the value in `sVal`
+ *		false otherwise
+ */
 hasValue(obj, sVal){
 	For key in obj{
 		if(obj[key] = sVal){
@@ -52,6 +58,13 @@ hasValue(obj, sVal){
 }
 
 
+/**
+ *	Function: keyOf
+ *
+ *	Returns:
+ *		key of `sVal`
+ *		false if `sVal` is not found
+ */
 keyOf(obj, sVal){
 	; Key can be "" or 0 (?) so cannot be as
 	; reliable for checking if object has value
