@@ -57,7 +57,13 @@ Press the *Load Default* key to reset to the default hotkey mapping. The default
 
 Press *START* to enable the hotkeys. Press *STOP* to disable it.
 
+## Screenshot
+
+![screenshot]
+
 [1]: https://autohotkey.com/
 [2]: https://autohotkey.com/download/
 [3]: https://autohotkey.com/docs/Scripts.htm#cmd
 [4]: https://autohotkey.com/docs/Scripts.htm#ahk2exe
+
+[screenshot]: https://i.imgur.com/pr7aUlm.png?1
