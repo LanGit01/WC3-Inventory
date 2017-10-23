@@ -10,7 +10,7 @@ Download [AutoHotkey][2]. There is an installer version and a portable version. 
 
 **Note:** *W3-Inventory is created for AutoHotkey 1.1, future versions may or may not support backwards compatibility.*
 
-#### Running the script directly
+### Running the script directly
 
 To run the script use the following command
 
@@ -20,7 +20,7 @@ AutoHotkey.exe path-to-file\W3-Inventory-Gui.ahk
 Where *AutoHotkey.exe* is the Unicode version of the AutoHotkey executable. Use the right version for your system (U32 = 32-bit, U64 = 64-bit). See the [docs][3].
 
 
-#### Compiling into a binary
+### Compiling into a binary
 
 Alternatively, you can compile it into a binary and run that binary instead
 
@@ -30,15 +30,15 @@ Ahk2.exe /in path-to-file\W3-Inventory-Gui.ahk
 
 See [AutoHotKey docs][4] for more information
 
-#### Configuring hotkeys
+### Configuring hotkeys
 
 Configure hotkeys by clicking the box next to the inventory slot/numpad key you want to change, then pressing your desired key/key combination.
 
-#### Saving current mapping
+### Saving current mapping
 
 Press the *Save Mapping* button to save the current hotkey configuration. Saved configurations are loaded when W3-Inventory is started.
 
-#### Reset to default hotkey mapping
+### Reset to default hotkey mapping
 
 Press the *Load Default* key to reset to the default hotkey mapping. The default mapping is:
 
@@ -53,7 +53,7 @@ Press the *Load Default* key to reset to the default hotkey mapping. The default
 |Slot 6          |NumPad2       |Alt + X          |
 
 
-#### Enabling the hotkeys
+### Enabling the hotkeys
 
 Press *START* to enable the hotkeys. Press *STOP* to disable it.
 
