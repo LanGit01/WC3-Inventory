@@ -9,7 +9,7 @@ HKREMAP_RUNNING := false
 ;              Constants
 ;========================================
 
-APP_VERSION := "0.2.1"
+APP_VERSION := "0.3.1"
 APP_TITLE := "WC3 Inventory"
 HOTKEY_EDIT_PREFIX := "HKEdit"
 
